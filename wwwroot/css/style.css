@@ -270,9 +270,13 @@ nav ul li:hover > ul,
 
 header {
 	float: left;
-	width: 100%;
+	width: 122%;
 	background-color: #e44d3a;
+	position: relative;
+	left: -121px;
 }
+
+
 .header-data {
 	float: left;
 	width: 100%;
@@ -6838,4 +6842,8 @@ ul#myTab {
     line-height: 24px;
     font-size: 14px;
     color: #666666;
+}
+
+.hideP {
+	visibility: hidden;
 }

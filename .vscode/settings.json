@@ -1,0 +1,13 @@
+{
+    "sqltools.connections": [
+        {
+            "database": "vibe",
+            "dialect": "MySQL",
+            "name": "Vibe DB",
+            "password": "toor",
+            "port": 3306,
+            "server": "localhost",
+            "username": "root"
+        }
+    ]
+}

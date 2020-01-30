@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router';
+
 import { Layout } from './components/Layout';
 import { Index } from './components/Index';
+import { Main } from './components/Main/Main';
+import { Logout } from './components/Logout/Logout';
 
 import './custom.css'
 
@@ -20,7 +23,9 @@ loadJSfile() {
       'js/jquery.min.js',
       'js/popper.js',
       'js/bootstrap.min.js',
+      'js/jquery.mCustomScrollbar.js',
       'lib/slick/slick.min.js',
+      'lib/bootbox/bootbox.js',
       'js/script.js'
   ];
   
@@ -46,6 +51,8 @@ loadJSfile() {
     return (
       <Layout>
         <Route exact path='/' component={Index} />
+        <Route exact path='/main' component={Main} />
+        <Route exact path='/logout' component={Logout} />
       </Layout>
     );
   }

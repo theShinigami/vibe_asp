@@ -1,6 +1,13 @@
 $(window).on("load", function() {
     "use strict";
 
+    //  ============= ADD TOOLTIP =============
+
+    $('[data-toggle="tooltip"]').tooltip();
+    // $('#signup-username').tooltip('disable');
+    // $('#signup-email').tooltip('disable');
+    // $('#signup-phone').tooltip('disable');
+
 
     //  ============= POST PROJECT POPUP FUNCTION =========
 
@@ -323,6 +330,127 @@ $(".user-info").on("click", function(){$("#users").hide();
         }
 
     });
+
+    //  ============= JS CHECK IF PHONE STARTS WITH ZERO AND CHANGE TO ETHIOPIAN COUNTRY CODE =========
+    //  ============= FOR THE FUTURE WILL CHANGE BASED ON THEIR LOCATION  =============
+
+    $("#signup-phone").on("input", function() {
+        var phone = $("#signup-phone").val();
+
+        // if the first number is 0
+        if (phone.startsWith('0')) {
+            $("#signup-phone").val(
+                "+251" + phone.substring(1)
+            );
+        }
+
+
+    });
+
+     //  ============= JS CHECK IF USERNAME EXISTS =============
+
+     $("#signup-username").on("input", function() {
+
+        var username = $("#signup-username").val();
+
+        $.ajax({
+            url: "/api/Signup/checkUsername/" + username,
+            type: "GET",
+            success: function(res) {
+
+                // if username is not avalible
+                if (res) {
+                    $("#signup-username").css({
+                        "border": "1px solid red"
+                    });
+
+                    $("#signup-username").tooltip('hide')
+                                        .attr('data-original-title', 'Username not avalible')
+                                        .tooltip('show');
+                } else { // if username is avalible
+                    $("#signup-username").css({
+                        "border": "1px solid #e5e5e5"
+                    });
+
+                    $("#signup-username").tooltip('hide')
+                                        .attr('data-original-title', 'Username avalible')
+                                        .tooltip('show');
+                }
+            }
+        });
+
+     });
+
+    
+     //  ============= JS CHECK IF EMAIL EXISTS =============
+
+     $("#signup-email").on("input", function() {
+
+        var email = $("#signup-email").val();
+
+        $.ajax({
+            url: "/api/Signup/checkEmail/" + email,
+            type: "GET",
+            success: function(res) {
+
+                // if email is not avalible
+                if (res) {
+                    $("#signup-email").css({
+                        "border": "1px solid red"
+                    });
+
+                    $("#signup-email").tooltip('hide')
+                                        .attr('data-original-title', 'Email not avalible')
+                                        .tooltip('show');
+                } else { // if email is avalible
+                    $("#signup-email").css({
+                        "border": "1px solid #e5e5e5"
+                    });
+
+                    $("#signup-email").tooltip('hide')
+                                        .attr('data-original-title', 'Email avalible')
+                                        .tooltip('show');
+                }
+            }
+        });
+        
+     });
+
+
+     //  ============= JS CHECK IF PHONE EXISTS =============
+
+     $("#signup-phone").on("input", function() {
+
+        var phone = $("#signup-phone").val();
+
+        $.ajax({
+            url: "/api/Signup/checkPhone/" + phone,
+            type: "GET",
+            success: function(res) {
+
+                // if phone is not avalible
+                if (res) {
+                    $("#signup-phone").css({
+                        "border": "1px solid red"
+                    });
+
+                    $("#signup-phone").tooltip('hide')
+                                        .attr('data-original-title', 'Phone not avalible')
+                                        .tooltip('show');
+
+                } else { // if phone is avalible
+                    $("#signup-phone").css({
+                        "border": "1px solid #e5e5e5"
+                    });
+
+                    $("#signup-phone").tooltip('hide')
+                                        .attr('data-original-title', 'Phone avalible')
+                                        .tooltip('show');
+                }
+            }
+        });
+
+     })
 
 
 

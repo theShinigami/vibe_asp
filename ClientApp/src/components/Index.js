@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Signin } from './signin/Siginin';
+import { SigninAndSignup } from './SigninAndSignup/SigninAndSignup';
 import { Footer } from './Footer/Footer';
 
 import '../static/css/animate.css';
@@ -35,7 +35,7 @@ export class Index extends Component {
     return (
         <React.Fragment>
             <div className="wrapper">
-                <Signin />
+                <SigninAndSignup />
             </div> {/* wrapper end */}
             <Footer />
         </React.Fragment>
