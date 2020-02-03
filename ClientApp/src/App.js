@@ -5,6 +5,7 @@ import { Layout } from './components/Layout';
 import { Index } from './components/Index';
 import { Main } from './components/Main/Main';
 import { Logout } from './components/Logout/Logout';
+import { AccountSettings } from './components/Main/Settings/AccountSettings';
 
 import './custom.css'
 
@@ -26,7 +27,8 @@ loadJSfile() {
       'js/jquery.mCustomScrollbar.js',
       'lib/slick/slick.min.js',
       'lib/bootbox/bootbox.js',
-      'js/script.js'
+      'js/script.js',
+      'js/alertify.js'
   ];
   
   for (var i=0; i<jsFiles.length; i++) {
@@ -53,6 +55,7 @@ loadJSfile() {
         <Route exact path='/' component={Index} />
         <Route exact path='/main' component={Main} />
         <Route exact path='/logout' component={Logout} />
+        <Route exact path='/account_settings' component={AccountSettings} />
       </Layout>
     );
   }

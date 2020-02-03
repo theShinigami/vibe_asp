@@ -10,6 +10,7 @@ namespace Vibe.Models
         public int? User { get; set; }
         public int? Follows { get; set; }
 
+        public virtual Users FollowsNavigation { get; set; }
         public virtual Users UserNavigation { get; set; }
     }
 }

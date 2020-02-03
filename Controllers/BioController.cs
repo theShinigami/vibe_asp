@@ -44,6 +44,29 @@ namespace Vibe.Controllers
         }
 
 
+        [HttpPost("update/{id}/{data}")]
+        public int UpdateBio(int id, string data) {
+            var result = this.vibedbContext.Users
+                                    .First(u => u.Id == id);
+
+            
+            if (result != null) {
+
+                result.Bio = data;
+                
+                this.vibedbContext.SaveChanges();
+
+                return 1;
+
+            } else {
+
+                return 0;
+
+            }
+
+        }
+
+
         
     }
 }

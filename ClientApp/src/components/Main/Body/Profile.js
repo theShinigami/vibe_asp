@@ -1,16 +1,26 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import Swal from 'sweetalert2';
+import ReactDOM from 'react-dom';
+import Avatar from 'react-avatar-edit';
+
 
 export class Profile extends Component {
     static displayName = Profile.name;
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             profileData: null,
             bioData: null,
-            fnfData: null
+            fnfData: null,
+            preview: null,
+            src: null,
         }
+
+
+        this.onClose = this.onClose.bind(this);
+        this.onCrop = this.onCrop.bind(this);
     }
 
     componentWillMount() {
@@ -21,6 +31,20 @@ export class Profile extends Component {
        // get fnfData
        this.fetchFnF();
     }
+
+
+    onClose() {
+        this.setState({
+            preview: null
+        });
+    }
+
+    onCrop(preview) {
+        this.setState({
+            preview: preview
+        });
+    }
+
   
   
     fetchProfile() {
@@ -54,9 +78,16 @@ export class Profile extends Component {
             });
     }
 
+
+    handleViewProfile(event) {
+        event.preventDefault();
+
+    }
+
     render() {
         return (
             <div className="user-data full-width">
+                
                 <div className="user-profile">
                     <div className="username-dt">
                         <div className="usr-pic">
@@ -78,7 +109,7 @@ export class Profile extends Component {
                         <span>{(this.state.fnfData != null) ? this.state.fnfData.followers : '-'}</span>
                     </li>
                     <li>
-                        <a href="my-profile.html" title="">View Profile</a>
+                        <a onClick={this.handleViewProfile} title="">View Profile</a>
                     </li>
                 </ul>
 			</div>

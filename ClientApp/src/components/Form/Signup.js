@@ -362,6 +362,12 @@ export class Signup extends Component {
                         </div>
                         <div className="col-lg-12 no-pdd">
                             <div className="sn-field">
+                                <input required type="text" name="payment" id="signup-payment" placeholder="Payment / hr" data-toggle="tooltip" data-placement="left" title="Payment" />
+                                <i className="la la-money"></i>
+                            </div>
+                        </div>
+                        <div className="col-lg-12 no-pdd">
+                            <div className="sn-field">
                                 <input required type="password" name="password" id="signup-password" placeholder="Password" />
                                 <i className="la la-lock"></i>
                             </div>

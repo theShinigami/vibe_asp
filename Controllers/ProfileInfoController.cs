@@ -48,6 +48,59 @@ namespace Vibe.Controllers
 
         }
 
+        [HttpPost("update/{id}/{fname}")]
+        public int UpdateBio(int id, string fname) {
+            var result = this.vibedbContext.Users
+                                    .First(u => u.Id == id);
+
+            
+            if (result != null) {
+
+                result.FullName = fname;
+                
+                this.vibedbContext.SaveChanges();
+
+                return 1;
+
+            } else {
+
+                return 0;
+
+            }
+
+        }
+
+        
+        [HttpGet("getNames/{take}")]
+        public List<NameUsernameData> getNames(int take) {
+
+            var result = this.vibedbContext.Users.Take(take).ToList();
+            List<NameUsernameData> names = new List<NameUsernameData>();
+
+
+
+            if (result.Any()) {
+
+                for (int i = 0; i < result.Count(); i++) {
+                    names.Add(new NameUsernameData {
+                        Id = result[i].Id,
+                        Fullname = result[i].FullName,
+                        Username = result[i].Username,
+                        Status = "Success"
+                    });
+                }
+
+            } else {
+                names.Add(new NameUsernameData {
+                    Status = "Failed"
+                });
+            }
+
+
+            return names;
+
+        }
+
 
         
     }

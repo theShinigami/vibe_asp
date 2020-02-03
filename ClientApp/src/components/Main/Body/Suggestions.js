@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import axios from 'axios';
 
 export class Suggestions extends Component {
     static displayName = Suggestions.name;
@@ -11,6 +12,8 @@ export class Suggestions extends Component {
             suggItem: null,
             suggLoadingTag: this.suggLoadingTag()
         }
+
+        this.followHandler = this.followHandler.bind(this);
     }
 
 
@@ -31,11 +34,32 @@ export class Suggestions extends Component {
                     this.setState({
                         suggData: result
                     });
-
+                  
                     // callback
                     cb();
                 });
 
+    }
+
+    followHandler(event) {
+        // prevent from page reload
+        event.preventDefault();
+        
+        axios({
+            method: 'POST',
+            url: '/api/fnf/follow/' + this.props.uid + '/' + event.target.id,
+          }).then((resp) => {
+            if (resp.data == 1) {
+                this.fetchSuggestion(() => {
+                    this.buildSuggTag();
+                    this.forceUpdate();
+                });
+            }
+            else
+              alertify.error("Error while following user!");
+          }).catch((err) => {
+            alertify.error("Error : " + err);
+          });
     }
 
 
@@ -50,7 +74,7 @@ export class Suggestions extends Component {
                         <h4>{this.state.suggData[i].fullName}</h4>
                         <span>{(this.state.suggData[i].bio) ? this.state.suggData[i].bio : '-'}</span>
                     </div>
-                    <span><i className="la la-plus"></i></span>
+                    <span><i onClick={this.followHandler} id={this.state.suggData[i].id} className="la la-plus"></i></span>
                 </div>
             );
         }

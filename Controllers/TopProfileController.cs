@@ -22,10 +22,11 @@ namespace Vibe.Controllers
 
 
         [HttpGet]
-        public List<TopProfileData> GetBio() {            
+        public List<TopProfileData> Get() {            
             var result = this.vibedbContext.Follower
-                                    .Select(f => f.User)
+                                    .Select(f => f.Follows)
                                     .Distinct()
+                                    .Take(6)
                                     .ToList();
             
             List<TopProfileData> tpd = new List<TopProfileData>();
@@ -55,9 +56,25 @@ namespace Vibe.Controllers
 
 
             } else {
-                tpd.Add(new TopProfileData {
-                    Status = "Failed"
-                });
+                 var limtResult = this.vibedbContext.Users.Take(6).ToList();
+
+                if (limtResult.Any()) {
+
+                    for (int i = 0; i < limtResult.Count(); i++) {
+
+                        tpd.Add(new TopProfileData {
+                            Id = limtResult[i].Id,
+                            Picture = this.vibedbContext.ProfilePicture
+                                                        .Where(p => p.Id == limtResult[i].Picture)
+                                                        .ToList()[0].PictureLocation,
+                            FullName = limtResult[i].FullName,
+                            Country = limtResult[i].Country,
+                            Status = "Success"
+                        });
+
+                    }
+
+                }
 
                 return tpd;
             }

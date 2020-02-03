@@ -10,21 +10,32 @@ export class MostViewedPeople extends Component {
         this.state = {
             suggData: null,
             suggItem: null,
-            suggLoadingTag: this.suggLoadingTag()
+            suggLoadingTag: this.suggLoadingTag(),
+            buildTag: false
         }
     }
 
 
     componentWillMount() {
         // get suggestion
-        // and build tag
-        this.fetchSuggestion(() => {
-            this.buildSuggTag();
-        });
+        this.fetchSuggestion();
     }
 
 
-    fetchSuggestion(cb) {
+    componentDidUpdate() {
+        if (!this.state.buildTag) {
+            this.buildSuggTag();
+
+            // set to true
+            this.setState({
+                buildTag: true
+            });
+        }
+    }
+
+
+
+    fetchSuggestion() {
 
         fetch('/api/suggestions/get/' + this.props.uid)
                 .then(result => result.json())
@@ -32,9 +43,6 @@ export class MostViewedPeople extends Component {
                     this.setState({
                         suggData: result
                     });
-
-                    // callback
-                    cb();
                 });
 
     }

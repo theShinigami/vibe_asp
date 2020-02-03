@@ -21,6 +21,21 @@ namespace Vibe.Controllers
         }
 
 
+        private int createSetting(int id) {
+            var settings = new Settings {
+                UserId = id
+            };
+
+            this.vibedbContext.Add(settings);
+            var result = this.vibedbContext.SaveChanges();
+
+            if (result == 1) {
+                return 1;
+            }
+
+            return 0;
+        }
+
         [HttpPost]
         public int Post() {
             var collection = Request.Form;
@@ -31,6 +46,8 @@ namespace Vibe.Controllers
             var Email = collection["Email"];
             var Phone = collection["Phone"];
             var Password = collection["password"];
+            int Payment = 0;
+            int.TryParse(collection["payment"], out Payment);
 
             var user = new Users {
                 FullName = Fullname,
@@ -40,11 +57,15 @@ namespace Vibe.Controllers
                 Phone = Phone,
                 Password = Password,
                 Picture = 0,
+                Payment = Payment,
                 Bio = "",
                 CreatedAt = DateTime.Now
             };
             this.vibedbContext.Add(user);
             var result = this.vibedbContext.SaveChanges();
+
+            // create settings
+            this.createSetting(user.Id);
 
             if (result == 1) {
                 return 1;

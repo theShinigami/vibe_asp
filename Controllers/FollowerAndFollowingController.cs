@@ -47,6 +47,44 @@ namespace Vibe.Controllers
 
         }
 
+        [HttpPost("follow/{id}/{follow}")]
+        public int Follow(int id, int follow) {
+
+            var userID = this.vibedbContext.Users
+                                        .Where(s => s.Id == id)
+                                        .ToList();
+            var userFollow = this.vibedbContext.Users
+                                        .Where(s => s.Id == follow)
+                                        .ToList();
+
+            
+            // check both before proceding
+            if (userID.Any() && userFollow.Any()) {
+
+                var followerModel = new Follower {
+                    User = id,
+                    Follows = follow
+                };
+
+                this.vibedbContext.Add(followerModel);
+                var result = this.vibedbContext.SaveChanges();
+
+                if (result == 1) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+
+
+
+
+            } else {
+                return 0;
+            }
+            
+
+        }
+
 
         
     }

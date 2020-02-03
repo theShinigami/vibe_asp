@@ -3,6 +3,64 @@ import React, { Component } from 'react'
 export class TopPosts extends Component {
     static displayName = TopPosts.name;
 
+
+
+    constructor() {
+        super();
+
+        this.state = {
+            posts: [],
+            tags: <p>Loading...</p>
+        }
+
+
+        this.fetchTopPost = this.fetchTopPost.bind(this);
+        this.buildTag = this.buildTag.bind(this);
+    }
+
+
+    componentWillMount() {
+        this.fetchTopPost(() => {
+            this.buildTag();
+        });
+    }
+
+
+    fetchTopPost(cb) {
+        fetch('/api/Post/getTop' )
+        .then(result => result.json())
+        .then(result => {
+            this.setState({
+                posts: result
+            });
+
+            // callback...
+            cb();
+        });
+    }
+
+
+    buildTag() {
+        let posts = [];
+
+        for (let i = 0; i < this.state.posts.length; i++) {
+            posts.push(
+                <div key={"top_post_" + i} className="job-info">
+                    <div className="job-details">
+                        <h3>{this.state.posts[i].fullname}</h3>
+                        <p>{this.state.posts[i].caption}</p>
+                    </div>
+                </div>
+            );
+        }
+
+        this.setState({
+            tags: posts
+        });
+
+    }
+
+
     render() {
         return (
             <div className="widget widget-jobs">
@@ -11,36 +69,7 @@ export class TopPosts extends Component {
                     <i className="la la-ellipsis-v"></i>
                 </div>
                 <div className="jobs-list">
-                    <div className="job-info">
-                        <div className="job-details">
-                            <h3>Senior Product Designer</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p>
-                        </div>
-                    </div>
-                    <div className="job-info">
-                        <div className="job-details">
-                            <h3>Senior UI / UX Designer</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p>
-                        </div>
-                    </div>
-                    <div className="job-info">
-                        <div className="job-details">
-                            <h3>Junior Seo Designer</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p>
-                        </div>
-                    </div>
-                    <div className="job-info">
-                        <div className="job-details">
-                            <h3>Senior PHP Designer</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p>
-                        </div>
-                    </div>
-                    <div className="job-info">
-                        <div className="job-details">
-                            <h3>Senior Developer Designer</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit..</p>
-                        </div>
-                    </div>
+                    {this.state.tags}
                 </div>
 			</div>
         )

@@ -23,8 +23,6 @@ export class Sigin extends Component {
 
     componentDidUpdate() {
         // check if user has logged in
-        console.log("ComponetDidUpdate...");
-        console.info("loggedIn: ", this.state.loggedIn);
         if (this.cookies.get("vibe_cookies") != undefined) {
             if (this.cookies.get("vibe_cookies").status != "Failed") {
                 return <Redirect to="/main" />;
@@ -53,8 +51,7 @@ export class Sigin extends Component {
                 this.setState({
                     userData: postData
                 });
-                console.info("postData: ", postData.status);
-
+                
 
                 // if faild change back to orginal
                 if (postData.status == "Failed") {

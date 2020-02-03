@@ -10,6 +10,7 @@ namespace Vibe.Models
         public int? PostId { get; set; }
         public DateTime CreatedAt { get; set; }
 
+        public virtual Users LikedByNavigation { get; set; }
         public virtual Post Post { get; set; }
     }
 }

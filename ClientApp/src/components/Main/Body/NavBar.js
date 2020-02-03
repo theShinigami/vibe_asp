@@ -1,16 +1,54 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import Cookies from 'universal-cookie';
+import Autosuggest from 'react-autosuggest';
+
+
+var languages = [];
+
+
+
+fetch('/api/ProfileInfo/getNames/10')
+		.then(result => result.json())
+		.then(result => {
+			languages = result;
+		});
+
+const getSuggestions = value => {
+	const inputValue = value.trim().toLowerCase();
+	const inputLength = inputValue.length;
+
+	return inputLength === 0 ? [] : languages.filter(lang => lang.fullname.toLowerCase().slice(0, inputLength) === inputValue);
+};
+
+const getSuggestionValue = suggestion => suggestion.fullname;
+
+
+const renderSuggestion = suggestion => (
+	<div>
+	  {suggestion.fullname}
+	</div>
+  );
 
 export  class NavBar extends Component {
     static displayName = NavBar.name;
 
 
     constructor() {
-        super();
+		super();
+		
+		this.cookie = new Cookies();
 
         this.state = {
             userData: null,
-            profilePic: null
-        }
+			profilePic: null,
+			value: '',
+			suggestions: []
+		}
+		
+
+		this.fetchUserData = this.fetchUserData.bind(this);
+		this.fetchProfilePic = this.fetchProfilePic.bind(this);
+		this.getUsername = this.getUsername.bind(this);
     }
 
 
@@ -19,7 +57,28 @@ export  class NavBar extends Component {
         this.fetchUserData(() => {
             this.fetchProfilePic();
         });
-    }
+	}
+	
+
+	onChange = (event, { newValue }) => {
+		this.setState({
+			value: newValue
+		});
+
+		console.log("Lang: ", languages);
+	};
+
+	onSuggestionsFetchRequested = ({ value }) => {
+		this.setState({
+			suggestions: getSuggestions(value)
+		});
+	}
+
+	onSuggestionClearRequested = () => {
+		this.setState({
+			suggestions: []
+		});
+	};
 
 
     fetchUserData(cb) {
@@ -38,29 +97,63 @@ export  class NavBar extends Component {
     }
 
     fetchProfilePic() {
-        console.log("Checking the id of: ", this.state.userData.picture);
-        fetch('/api/ProfilePicture/get/' + this.state.userData.picture)
+        fetch('/api/ProfilePicture/get/' + this.cookie.get("vibe_cookies").picture)
                 .then(result => result.json())
                 .then(result => {
                     this.setState({
                         profilePic: result.pictureLocation
                     });
-                    console.log("this pic: ", result.pictureLocation);
                 });
-    }
+	}
+
+
+
+	getUsername() {
+
+		if (this.state.userData != null) {
+			
+			if (this.state.userData.username.length > 4) {
+				return this.state.userData.username.substring(0, 4) + '.';
+			} else {
+				return this.state.userData.username;
+			}
+
+		} else {
+			return '.';
+		}
+
+	}
 
 
     
     render() {
+		const { value, suggestions } = this.state;
+
+		const inputProps = {
+			placeholder: 'Type a programming language',
+			value,
+			onChange: this.onChange
+		};
+
         return (
             <div className="header-data">
 					<div className="logo">
-						<img alt="logo" src="/Pictures/Logo/v-logo.svg" />
+						<a href="/main">
+							<img alt="logo" src="/Pictures/Logo/v-logo.svg" />
+						</a>
 					</div>
 					<div className="search-bar">
 						<form>
-							<input type="text" name="search" placeholder="Search..." />
-							<button type="submit"><i className="la la-search"></i></button>
+							<Autosuggest
+								suggestions={suggestions}
+								onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+								onSuggestionsClearRequested={this.onSuggestionClearRequested}
+								getSuggestionValue={getSuggestionValue}
+								renderSuggestion={renderSuggestion}
+								inputProps={inputProps}
+							/>
+							{/* <input type="text" name="search" placeholder="Search..." /> */}
+							{/* <button type="submit"><i className="la la-search"></i></button> */}
 						</form>
 					</div>
 					<nav>
@@ -182,15 +275,15 @@ export  class NavBar extends Component {
 						<a href="#" title=""><i className="fa fa-bars"></i></a>
 					</div>
 					<div className="user-account">
-						<div className="user-info">
+						<div className="user-info" >
 							<img width="30" height="30" src={(this.state.profilePic != null) ? this.state.profilePic : ''} alt=""/>
-								<a onClick={e => e.preventDefault()} title=""><font color="#ffffff">{(this.state.userData != null) ? this.state.userData.username : '.'}</font></a>
+								<a onClick={e => e.preventDefault()} title=""><font color="#ffffff">{this.getUsername()}</font></a>
 							<i className="la la-sort-down"></i>
 						</div>
 						<div className="user-account-settingss" id="users">
 							<h3>Setting</h3>
 							<ul className="us-links">
-								<li><a href="profile-account-setting.html" title="">Account Setting</a></li>
+								<li><a href="/account_settings" title="">Account Setting</a></li>
 								<li><a href="#" title="">Privacy</a></li>
 								<li><a href="#" title="">Faqs</a></li>
 								<li><a href="#" title="">Terms & Conditions</a></li>

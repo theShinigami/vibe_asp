@@ -9,21 +9,34 @@ export class TopProfiles extends Component {
         this.state = {
             topData: null,
             topItem: null,
-            topLoadingTag: this.suggLoadingTag()
+            topLoadingTag: this.suggLoadingTag(),
+            buildTag: false,
         }
     }
 
 
     componentWillMount() {
         // get suggestion
-        // and build tag
-        this.fetchTopProfiles(() => {
-            this.buildTopTag();
-        });
+        this.fetchTopProfiles();
     }
 
 
-    fetchTopProfiles(cb) {
+    componentDidUpdate() {
+        // build tag
+
+        if (!this.state.buildTag) {
+            this.buildTopTag();
+            
+            // set build tag to true
+            this.setState({
+                buildTag: true
+            });
+        }
+
+    }
+
+
+    fetchTopProfiles() {
 
         fetch('/api/TopProfile/')
                 .then(result => result.json())
@@ -31,9 +44,6 @@ export class TopProfiles extends Component {
                     this.setState({
                         topData: result
                     });
-
-                    // callback
-                    cb();
                 });
 
     }
@@ -60,6 +70,7 @@ export class TopProfiles extends Component {
         this.setState({
             topItem: top
         });
+
     }
 
     suggLoadingTag() {
@@ -73,77 +84,9 @@ export class TopProfiles extends Component {
     
     render() {
         return (
-            <div className="top-profiles">
-                    <div className="pf-hd">
-                        <h3>Top Profiles</h3>
-                        <i className="la la-ellipsis-v"></i>
-                    </div>
-                    <div className="profiles-slider">
-                        {(this.state.topItem != null) ? this.state.topItem : this.state.topLoadingTag}
-                        {/* <div className="user-profy">
-                            <img src="images/resources/user1.png" alt=""/>
-                            <h3>John Doe</h3>
-                            <span>Graphic Designer</span>
-                            <ul>
-                                <li><a href="#" title="" className="followw">Follow</a></li>
-                            </ul>
-                            <a href="#" title="">View Profile</a>
-                        </div>
-                        <div className="user-profy">
-                            <img src="images/resources/user2.png" alt=""/>
-                            <h3>John Doe</h3>
-                            <span>Graphic Designer</span>
-                            <ul>
-                                <li><a href="#" title="" className="followw">Follow</a></li>
-                            </ul>
-                            <a href="#" title="">View Profile</a>
-                        </div>
-                        <div className="user-profy">
-                            <img src="images/resources/user3.png" alt=""/>
-                            <h3>John Doe</h3>
-                            <span>Graphic Designer</span>
-                            <ul>
-                                <li><a href="#" title="" className="followw">Follow</a></li>
-                                <li><a href="#" title="" className="envlp"><img src="images/envelop.png" alt=""/></a></li>
-                                <li><a href="#" title="" className="hire">hire</a></li>
-                            </ul>
-                            <a href="#" title="">View Profile</a>
-                        </div>
-                        <div className="user-profy">
-                            <img src="images/resources/user1.png" alt=""/>
-                            <h3>John Doe</h3>
-                            <span>Graphic Designer</span>
-                            <ul>
-                                <li><a href="#" title="" className="followw">Follow</a></li>
-                                <li><a href="#" title="" className="envlp"><img src="images/envelop.png" alt=""/></a></li>
-                                <li><a href="#" title="" className="hire">hire</a></li>
-                            </ul>
-                            <a href="#" title="">View Profile</a>
-                        </div>
-                        <div className="user-profy">
-                            <img src="images/resources/user2.png" alt=""/>
-                            <h3>John Doe</h3>
-                            <span>Graphic Designer</span>
-                            <ul>
-                                <li><a href="#" title="" className="followw">Follow</a></li>
-                                <li><a href="#" title="" className="envlp"><img src="images/envelop.png" alt=""/></a></li>
-                                <li><a href="#" title="" className="hire">hire</a></li>
-                            </ul>
-                            <a href="#" title="">View Profile</a>
-                        </div>
-                        <div className="user-profy">
-                            <img src="images/resources/user3.png" alt=""/>
-                            <h3>John Doe</h3>
-                            <span>Graphic Designer</span>
-                            <ul>
-                                <li><a href="#" title="" className="followw">Follow</a></li>
-                                <li><a href="#" title="" className="envlp"><img src="images/envelop.png" alt=""/></a></li>
-                                <li><a href="#" title="" className="hire">hire</a></li>
-                            </ul>
-                            <a href="#" title="">View Profile</a>
-                        </div> */}
-                    </div>
-				</div>
+            <div className="profiles-slider">
+                {(this.state.topItem != null) ? this.state.topItem : this.state.topLoadingTag}
+            </div>
         )
     }
 }
