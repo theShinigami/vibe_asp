@@ -16,6 +16,7 @@ namespace Vibe.Models
         }
 
         public virtual DbSet<Comments> Comments { get; set; }
+        public virtual DbSet<EfmigrationsHistory> EfmigrationsHistory { get; set; }
         public virtual DbSet<Follower> Follower { get; set; }
         public virtual DbSet<Image> Image { get; set; }
         public virtual DbSet<Message> Message { get; set; }
@@ -75,6 +76,25 @@ namespace Vibe.Models
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.PostId)
                     .HasConstraintName("comments_ibfk_1");
+            });
+
+            modelBuilder.Entity<EfmigrationsHistory>(entity =>
+            {
+                entity.HasKey(e => e.MigrationId)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("__EFMigrationsHistory");
+
+                entity.Property(e => e.MigrationId)
+                    .HasColumnType("varchar(95)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
+
+                entity.Property(e => e.ProductVersion)
+                    .IsRequired()
+                    .HasColumnType("varchar(32)")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
             });
 
             modelBuilder.Entity<Follower>(entity =>
@@ -279,6 +299,13 @@ namespace Vibe.Models
                     .HasColumnName("img_id")
                     .HasColumnType("int(11)")
                     .HasDefaultValueSql("'NULL'");
+
+                entity.Property(e => e.Title)
+                    .HasColumnName("title")
+                    .HasColumnType("varchar(100)")
+                    .HasDefaultValueSql("'NULL'")
+                    .HasCharSet("utf8mb4")
+                    .HasCollation("utf8mb4_general_ci");
 
                 entity.Property(e => e.Uid)
                     .HasColumnName("uid")

@@ -21,32 +21,58 @@ namespace Vibe.Controllers
         }
 
 
+        [HttpPost]
+        public int Post() {
+            var collection = Request.Form;
+            
+            var post = new Post {
+                Uid = int.Parse(collection["uid"]),
+                Caption = collection["description"],
+                Title = collection["title"]
+            };
+
+            this.vibedbContext.Add(post);
+            var postResult = this.vibedbContext.SaveChanges();
+
+
+            if (postResult == 1) {
+                return 1;
+            } else {
+                return 0;
+            }
+
+
+            
+        }
+
+
         [HttpGet("getTop")]
         public List<PostData> getTop() {
 
             var result = this.vibedbContext.Post
-                                            .Take(6)
+                                            .Take(10)
                                             .ToList();
             
             List<PostData> postData = new List<PostData>();
 
             if (result.Any()) {
-                
-                for (int i = 0; i < result.Count(); i++) {
+                _logger.LogInformation("Post Count: " + result.Count());
+            
 
+                foreach (var post in result) {
                     postData.Add(new PostData {
-                        Id = result[i].Id,
-                        Fullname = this.vibedbContext.Users.Where(u => u.Id == result[i].Uid).ToList()[0].FullName,
-                        CreatedAt = result[i].CreatedAt,
-                        PosterPicture = this.vibedbContext.ProfilePicture.Where(pp => pp.Id == result[i].Uid).ToList()[0].PictureLocation,
-                        Country = this.vibedbContext.Users.Where(u => u.Id == result[i].Uid).ToList()[0].Country,
-                        Payment = (int)this.vibedbContext.Users.Where(u => u.Id == result[i].Uid).ToList()[0].Payment,
-                        Like = this.vibedbContext.Plike.Where(pl => pl.PostId == result[i].Id).ToList().Count(),
-                        ImgId = (result[i].ImgId == null) ? -1 : (int)result[i].ImgId,
-                        Caption = result[i].Caption,
+                        Id = post.Id,
+                        Fullname = this.vibedbContext.Users.Where(u => u.Id == post.Uid).ToList()[0].FullName,
+                        CreatedAt = post.CreatedAt,
+                        PosterPicture = (this.vibedbContext.ProfilePicture.Where(pp => pp.UserId == post.Uid).ToList().Any()) ? this.vibedbContext.ProfilePicture.Where(pp => pp.UserId == post.Uid).ToList()[0].PictureLocation : "/Pictures/Profile/default-user-profile.jpg",
+                        Title = post.Title,
+                        Country = this.vibedbContext.Users.Where(u => u.Id == post.Uid).ToList()[0].Country,
+                        Payment = (int)this.vibedbContext.Users.Where(u => u.Id == post.Uid).ToList()[0].Payment,
+                        Like = this.vibedbContext.Plike.Where(pl => pl.PostId == post.Id).ToList().Count(),
+                        ImgId = (post.ImgId == null) ? -1 : (int)post.ImgId,
+                        Caption = post.Caption,
                         Status = "Success"
                     });
-
                 }
 
             } else {

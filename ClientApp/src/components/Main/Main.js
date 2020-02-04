@@ -96,7 +96,9 @@ export class Main extends Component {
 									pid={this.state.userData.picture}
 									/>
 									<div className="posts-section">
-										<PostHandler />
+										<PostHandler 
+										uid={this.state.userData.id}
+										/>
 										<div className="process-comm">
 											<div className="spinner">
 												<div className="bounce1"></div>
@@ -129,7 +131,9 @@ export class Main extends Component {
 
 		<VibeMapView />
 
-		<PostContent />
+		<PostContent
+		uid={this.state.userData.id}
+		/>
 
 	</div>
     );

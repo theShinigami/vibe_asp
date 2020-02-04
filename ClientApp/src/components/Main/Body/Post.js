@@ -37,7 +37,7 @@ export class Post extends Component {
                 </div>
                 <div className="post-st">
                     <ul>
-                        <li><a className="post_project" href="#" title="">View Map</a></li>
+                        <li><a className="post_project" href="#" title="">Post Project</a></li>
                         <li><a className="post-jb active" href="#" title="">Post</a></li>
                     </ul>
                 </div>

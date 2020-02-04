@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { TopProfiles } from './TopProfiles';
+import axios from 'axios';
 
 
 export class PostHandler extends Component {
@@ -16,6 +17,7 @@ export class PostHandler extends Component {
 
         this.fetchTopPost = this.fetchTopPost.bind(this);
         this.buildTag = this.buildTag.bind(this);
+        this.likeHandler = this.likeHandler.bind(this);
     
     }
 
@@ -40,6 +42,27 @@ export class PostHandler extends Component {
             });
     }
 
+    likeHandler(event) {
+        // prevent page from reloading
+        event.preventDefault();
+
+        console.log("Id: ", event.target.id.substring(7));
+        axios({
+            method: 'POST',
+			url: '/api/Like/' + event.target.id.substring(7) +'/' + this.props.uid,
+          }).then((resp) => {
+            if (resp.data == 1) {
+				alertify.success("Liked!");
+            }
+            else
+              alertify.error("Unlike!");
+
+            this.forceUpdate();
+          }).catch((err) => {
+            alertify.error("Error : " + err);
+          });
+    }
+
 
     buildTag() {
         let posts = [];
@@ -49,7 +72,7 @@ export class PostHandler extends Component {
                 <div key={"main_post_content_" + i} className="post-bar">
                     <div className="post_topbar">
                         <div className="usy-dt">
-                            <img src="images/resources/us-pic.png" alt=""/>
+                            <img width="40" height="40" src={this.state.posts[i].posterPicture} alt=""/>
                             <div className="usy-name">
                                 <h3>{this.state.posts[i].fullname}</h3>
                                 <span><img src="images/clock.png" alt=""/>{this.state.posts[i].createdAt}</span>
@@ -76,7 +99,7 @@ export class PostHandler extends Component {
                         </ul>
                     </div>
                     <div className="job_descp">
-                        <h3>Senior Wordpress Developer</h3>
+                        <h3>{this.state.posts[i].title}</h3>
                         <ul className="job-dt">
                             <li><a href="#" title="">Full Time</a></li>
                             <li><span>${this.state.posts[i].payment} / hr</span></li>
@@ -86,7 +109,7 @@ export class PostHandler extends Component {
                     <div className="job-status-bar">
                         <ul className="like-com">
                             <li>
-                                <a href="#"><i className="fas fa-heart"></i> Like</a>
+                                <a id={"postid_" + this.state.posts[i].id} onClick={this.likeHandler} href="#"><i className="fas fa-heart"></i> Like</a>
                                 <img src="images/liked-img.png" alt=""/>
                                 <span>{this.state.posts[i].like}</span>
                             </li> 

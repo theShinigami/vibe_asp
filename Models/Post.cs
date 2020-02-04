@@ -16,6 +16,7 @@ namespace Vibe.Models
         public int? Uid { get; set; }
         public int? ImgId { get; set; }
         public string Caption { get; set; }
+        public string Title { get; set; }
 
         public virtual Image Img { get; set; }
         public virtual Users U { get; set; }

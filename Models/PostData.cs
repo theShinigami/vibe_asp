@@ -7,6 +7,7 @@ namespace Vibe.Models
         public int Id { get; set; }
         public string Fullname { get; set; }
         public string PosterPicture { get; set; }
+        public string Title { get; set; }
         public DateTime CreatedAt { get; set; }
         public string Country { get; set; }
         public int Payment { get; set; }
