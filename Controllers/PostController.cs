@@ -50,7 +50,7 @@ namespace Vibe.Controllers
         public List<PostData> getTop() {
 
             var result = this.vibedbContext.Post
-                                            .Take(10)
+                                            .Take(15)
                                             .ToList();
             
             List<PostData> postData = new List<PostData>();

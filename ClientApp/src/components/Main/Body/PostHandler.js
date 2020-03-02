@@ -34,7 +34,7 @@ export class PostHandler extends Component {
             .then(result => result.json())
             .then(result => {
                 this.setState({
-                    posts: result
+                    posts: result.reverse()
                 });
 
                 // callback...
@@ -63,11 +63,31 @@ export class PostHandler extends Component {
           });
     }
 
+    async fetchImage(id) {
+        // await fetch('/api/ProfilePicture/getImage/' + id)
+        //     .then(result => result.json())
+        //     .then(result => {
+        //         return result.picLocation;
+        //     });
+        
+            const resp = await fetch('/api/ProfilePicture/getImage/' + id);
+            const data = await resp.json();
+            return data.picLocation;
+    }
+
 
     buildTag() {
         let posts = [];
 
         for (let i = 0; i < this.state.posts.length; i++) {
+            let imgTag = null;
+            if (this.state.posts[i].imgId != -1) {
+                // let img = this.fetchImage(this.state.posts[i].imgId);
+                // img.then((d) => {
+                //     console.log(d)
+                // })
+                imgTag = <img src="/Uploads/Post/wallimage1.jpg" width="200" height="200" />;
+            }
             posts.push(
                 <div key={"main_post_content_" + i} className="post-bar">
                     <div className="post_topbar">
@@ -100,12 +120,17 @@ export class PostHandler extends Component {
                     </div>
                     <div className="job_descp">
                         <h3>{this.state.posts[i].title}</h3>
+
                         <ul className="job-dt">
                             <li><a href="#" title="">Full Time</a></li>
                             <li><span>${this.state.posts[i].payment} / hr</span></li>
                         </ul>
+                
                         <p>{this.state.posts[i].caption} <a href="#" title="">view more</a></p>
                     </div>
+
+                    {(imgTag != null) ? imgTag : ''}
+
                     <div className="job-status-bar">
                         <ul className="like-com">
                             <li>

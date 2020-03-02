@@ -46,6 +46,29 @@ namespace Vibe.Controllers
             }
         }
 
+        [HttpGet("getImage/{id}")]
+        public ImageData GetImage(int id) {
+            var result = this.vibedbContext.Image
+                                    .Where(i => i.Id == id);
+            
+
+            if (result.Any()) {
+                var listData = result.ToList()[0];
+
+                return new ImageData {
+                    Id = listData.Id,
+                    PicLocation = listData.PicLocation,
+                    Hash = listData.Hash,
+                    UploadedBy = listData.UploadedBy,
+                    Status = "Success"
+                };
+            } else {
+                return new ImageData {
+                    Status = "Failed"
+                };
+            }
+        }
+
 
         
     }

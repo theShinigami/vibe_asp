@@ -8,7 +8,7 @@ import { NavBar } from './Body/NavBar';
 import { Suggestions } from './Body/Suggestions';
 import { LeftFooter } from './Body/LeftFooter';
 import { Post } from './Body/Post';
-import { VibeMapView } from './Body/VibeMapView';
+import { ProjectPost } from './Body/ProjectPost';
 import { PostContent } from './Body/PostContent';
 import { TopPosts } from './Body/TopPosts';
 import { MostViewed } from './Body/MostViewed';
@@ -129,7 +129,7 @@ export class Main extends Component {
 
 
 
-		<VibeMapView />
+		<ProjectPost />
 
 		<PostContent
 		uid={this.state.userData.id}
